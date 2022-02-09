@@ -1,0 +1,5 @@
+googlesearch.py==1.2
+python-telegram-bot==13.10
+bs4
+pyTelegramBotAPI
+requests
