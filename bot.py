@@ -17,18 +17,11 @@ def parse(url):
     api = requests.get(url)
     api_content = api.text
     soup = BeautifulSoup(api_content, 'html.parser')
-    text = soup.find_all(class_='w-words__text')
+    text = soup.find_all(class_='b-podbor__text')
     f = open("file.txt", "w")
     for i in range(len(text)):
         f.write(text[i].get_text() + "\n")
     f.close()
-    with open("file.txt", "r") as input:
-        lines = input.readlines()
-        with open("file2.txt", "w") as output:
-            for line in lines:
-                if line.strip('\n') != 'Взято с сайта https://mychords.net':
-                    if line.strip('\n') != 'Source website https://mychords.net':
-                        output.write(line)
 
 
 @bot.message_handler(content_types='text')
@@ -36,10 +29,10 @@ def listener(message):
     try:
         text = message.text
         chat_id = message.chat.id
-        search = google_search_py.search(text + " mychords.net")
+        search = google_search_py.search(text + " amdm.ru")
         needed_url = search['url']
         parse(needed_url)
-        f = open("file2.txt")
+        f = open("file.txt")
         read = f.read()
         if len(read) > 4095:
             for x in range(0, len(read), 4095):
@@ -48,7 +41,6 @@ def listener(message):
             bot.reply_to(message, text=read)
         f.close()
         os.remove("file.txt")
-        os.remove("file2.txt")
     except Exception as e:
         bot.send_message(chat_id, "По Вашему запросу ничего не найдено. Попробуйте добавить фамилию автора")
         print(e)
